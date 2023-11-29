@@ -4,6 +4,7 @@ import {View, Animated, Text, ScrollView, StyleSheet, Image, Pressable, FlatList
 import {Audio} from "expo-av";
 import Constants from 'expo-constants'
 import {AntDesign} from "@expo/vector-icons";
+import Slider from "@react-native-community/slider";
 
 
 function useRss() {
@@ -125,11 +126,20 @@ function EpisodeListItem({episode}: { episode: Episode }) {
 }
 
 function AudioPlayer({episode}: { episode: Episode }) {
+    const [previousEpisode, setPreviousEpisode] = useState<Episode | null>(episode);
     const [sound, setSound] = useState<Audio.Sound | null>(null);
     const [audioStatus, setAudioStatus] = useState({positionMillis: 0, durationMillis: 0});
     const isPlaying = sound !== null;
     const url = episode.enclosures[0].url;
     if (!url) return (<View><Text>Can not play that episode</Text></View>);
+
+    if (previousEpisode?.id !== episode.id) {
+        if (sound) {
+            sound.unloadAsync().then(() => setSound(null));
+        }
+        setAudioStatus({positionMillis: 0, durationMillis: 0});
+        setPreviousEpisode(episode);
+    }
 
     async function playSound() {
         console.log('Loading Sound');
@@ -156,11 +166,13 @@ function AudioPlayer({episode}: { episode: Episode }) {
             }
             : undefined, [sound]);
 
-    const progress = isNaN(audioStatus.positionMillis / audioStatus.durationMillis) ? 0 : audioStatus.positionMillis / audioStatus.durationMillis;
-
     return (
         <View>
-            <ProgressBar progress={progress }/>
+            <Slider onValueChange={value => {
+                if (sound) {
+                    sound.setPositionAsync(value).then(() => setAudioStatus({...audioStatus, positionMillis: value}));
+                }
+            }} style={{width: '100%', height: 10 }} value={audioStatus.positionMillis} maximumValue={audioStatus.durationMillis}/>
             <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center', padding: 16, gap: 12}}>
                 <Pressable onPress={playSound}><PlayPauseIcon isPlaying={isPlaying}/></Pressable>
                 <View>
@@ -183,14 +195,6 @@ function millisToMinutes(millis: number) {
 
     return `${minutesWithZero}:${secondsWithZero}`;
 }
-
-function ProgressBar({progress}: { progress: number }) {
-    return <View style={{position: 'relative', display: 'flex'}}>
-        <Animated.View style={{width: "100%", position: 'absolute', zIndex: 2, backgroundColor: 'red', height: 2, transform: [{scaleX: progress}, {}]}}></Animated.View>
-        <View style={{width: "100%", position: 'absolute', backgroundColor: 'gray', height: 2}}></View>
-    </View>;
-}
-
 function PlayPauseIcon({isPlaying}: { isPlaying: boolean }) {
     return <>{isPlaying ? <AntDesign name='pause' size={24} color='black'/> :
         <AntDesign name='play' size={24} color='black'/>}</>;
