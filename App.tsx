@@ -2,13 +2,11 @@ import { useEffect, useState } from "react";
 import * as Parser from "react-native-rss-parser";
 import {
   View,
-  Animated,
   Text,
   ScrollView,
   StyleSheet,
   Image,
   Pressable,
-  FlatList,
 } from "react-native";
 import { Audio } from "expo-av";
 import Constants from "expo-constants";
