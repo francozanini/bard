@@ -243,7 +243,7 @@ function AudioPlayer({ episode }: { episode: Episode }) {
         <View>
           <Text style={{ fontWeight: "bold" }}>{episode.title}</Text>
         </View>
-        <View style={{ alignSelf: "flex-end" }}>
+        <View>
           <Text>
             {millisToMinutes(
               audioStatus.durationMillis - audioStatus.positionMillis
@@ -264,6 +264,7 @@ function millisToMinutes(millis: number) {
 
   return `${minutesWithZero}:${secondsWithZero}`;
 }
+
 function PlayPauseIcon({ isPlaying }: { isPlaying: boolean }) {
   return (
     <>
