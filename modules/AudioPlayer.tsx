@@ -92,16 +92,12 @@ export function AudioPlayer({ episode }: { episode: Episode }) {
         }}
       >
         <PlayPauseIcon isPlaying={isPlaying} onPress={playSound} />
-        <View>
-          <Text style={{ fontWeight: "bold" }}>{episode.title}</Text>
-        </View>
-        <View>
-          <Text>
-            {millisToMinutes(
-              audioStatus.durationMillis - audioStatus.positionMillis,
-            )}
-          </Text>
-        </View>
+        <Text style={{ fontWeight: "bold" }}>{episode.title}</Text>
+        <Text>
+          {millisToMinutes(
+            audioStatus.durationMillis - audioStatus.positionMillis,
+          )}
+        </Text>
       </View>
     </View>
   );
