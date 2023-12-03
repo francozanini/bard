@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "expo-app",
-    "slug": "expo-app",
+    "name": "bard",
+    "slug": "Bard",
+    "scheme": "bard",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -11,9 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
