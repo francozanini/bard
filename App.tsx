@@ -1,5 +1,5 @@
-import {Text} from "react-native";
+import { Text } from "react-native";
 
-export default function () {
-  return <Text>Default</Text>
+export default function Root() {
+  return <Text>Default</Text>;
 }
