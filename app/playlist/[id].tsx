@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import Constants from "expo-constants";
-import { AudioPlayer } from "../modules/AudioPlayer";
-import { Episode, EpisodeList } from "../modules/Episodes";
-import { useRss } from "../modules/Rss";
+import { AudioPlayer } from "../../modules/AudioPlayer";
+import { Episode, EpisodeList } from "../../modules/Episodes";
+import { useRss } from "../../modules/Rss";
+import { useLocalSearchParams } from "expo-router";
 
 const styles = StyleSheet.create({
   container: {
@@ -40,8 +41,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function Playlist() {
-  const rss = useRss("https://anchor.fm/s/6f4e0c2c/podcast/rss");
+export default function ContentThing() {
+  const params = useLocalSearchParams<{ id: string }>();
+  //https://anchor.fm/s/6f4e0c2c/podcast/rss
+  const rss = useRss(params.id);
   const [selectedEpisode, setSelectedEpisode] = useState<Episode | null>(null);
 
   if (!rss || rss.items?.length === 0)

@@ -6,19 +6,30 @@ import {
   Text,
   SafeAreaView,
   StyleSheet,
+  View,
 } from "react-native";
 import { useSubscriptions } from "../modules/Rss";
 
 async function getRSSList() {
   const jsonList = await AsyncStorage.getItem("rssList");
   if (!jsonList) return [];
-  return JSON.parse(jsonList) as { rssName: string; rssUrl: string }[];
+  return JSON.parse(jsonList) as {
+    rssName: string;
+    rssUrl: string;
+    id: number;
+  }[];
 }
 
 const storeRSS = async (rssName: string, rssUrl: string) => {
   const rssList = await getRSSList();
-  rssList.push({ rssName, rssUrl });
+  rssList.push({ rssName, rssUrl, id: rssList.length + 1 });
   await AsyncStorage.setItem("rssList", JSON.stringify(rssList));
+};
+
+const deleteRSS = async (rssUrl: string) => {
+  const rssList = await getRSSList();
+  const newRssList = rssList.filter((rss) => rss.rssUrl !== rssUrl);
+  await AsyncStorage.setItem("rssList", JSON.stringify(newRssList));
 };
 
 const styles = StyleSheet.create({
@@ -39,7 +50,6 @@ export default function AddRSS() {
   const [rssUrl, setRssUrl] = useState("");
   const [rssName, setRssName] = useState("");
 
-  console.log(subscriptions, loading);
   return (
     <SafeAreaView style={styles.container}>
       <Text>Name</Text>
@@ -60,7 +70,10 @@ export default function AddRSS() {
       <Text>Current RSS List</Text>
       {loading ? <Text>Loading...</Text> : null}
       {subscriptions.map((sub) => (
-        <Text key={sub.rssUrl}>{sub.rssName}</Text>
+        <View key={sub.rssUrl}>
+          <Text>{sub.rssName}</Text>
+          <Button title="Delete" onPress={() => deleteRSS(sub.rssUrl)} />
+        </View>
       ))}
     </SafeAreaView>
   );

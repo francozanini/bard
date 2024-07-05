@@ -1,4 +1,4 @@
-import { useSubscriptions } from "../modules/Rss";
+import { useSubscriptions } from "../../modules/Rss";
 import { Text, View } from "react-native";
 import { Link } from "expo-router";
 
@@ -16,10 +16,7 @@ export default function Playlist() {
   return (
     <View>
       {subscriptions.map((sub) => (
-        <Link
-          key={sub.rssUrl}
-          href={`/playlist/${encodeURIComponent(sub.rssUrl)}`}
-        >
+        <Link key={sub.rssUrl} href={`/playlist/${sub.id}`}>
           {sub.rssName}
         </Link>
       ))}
